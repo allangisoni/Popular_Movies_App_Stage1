@@ -12,7 +12,7 @@
     android:layout_height="match_parent"
     android:layout_centerInParent="true"
     android:scaleType="centerCrop"
-    android:contentDescription="Thumbnail"
+    android:contentDescription="@string/thumbnailBackdrop"
     android:adjustViewBounds="true"  />
 
 

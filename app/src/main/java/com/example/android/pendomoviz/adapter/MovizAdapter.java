@@ -8,7 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.android.pendomoviz.DetailsActivity;
+import com.example.android.pendomoviz.activity.DetailsActivity;
 import com.example.android.pendomoviz.R;
 import com.example.android.pendomoviz.model.Moviz;
 import com.squareup.picasso.Picasso;
@@ -18,8 +18,8 @@ import java.util.List;
 public class MovizAdapter extends RecyclerView.Adapter<MovizViewHolder> {
 
 
-    private List<Moviz> movizlist;
-    private Context context;
+    private final List<Moviz> movizlist;
+    private final Context context;
 
     public  MovizAdapter(List<Moviz> movizlist, Context context){
 
@@ -39,8 +39,8 @@ public class MovizAdapter extends RecyclerView.Adapter<MovizViewHolder> {
 
         final Moviz moviz = movizlist.get(position);
 
-        Picasso.with(context).load( moviz.getPosterPath()).placeholder(android.R.drawable.sym_def_app_icon)
-                .error(android.R.drawable.sym_contact_card).into(holder.thumbnailImage);
+        Picasso.with(context).load( moviz.getPosterPath()).placeholder(R.drawable.diariesposter)
+                .error(R.drawable.diariesposter).into(holder.thumbnailImage);
 
         holder.thumbnailImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,4 +56,6 @@ public class MovizAdapter extends RecyclerView.Adapter<MovizViewHolder> {
     public int getItemCount() {
         return movizlist.size();
     }
+
+
 }

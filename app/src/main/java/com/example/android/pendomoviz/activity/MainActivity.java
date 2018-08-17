@@ -1,0 +1,320 @@
+package com.example.android.pendomoviz.activity;
+
+
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.support.v7.preference.PreferenceManager;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.Toast;
+
+import com.example.android.pendomoviz.NetworkConnection.App;
+import com.example.android.pendomoviz.NetworkConnection.InternetConnectionListener;
+import com.example.android.pendomoviz.R;
+import com.example.android.pendomoviz.adapter.MovizAdapter;
+import com.example.android.pendomoviz.model.Moviz;
+import com.example.android.pendomoviz.model.MovizResponse;
+import com.example.android.pendomoviz.rest.TMdbApiClient;
+import com.example.android.pendomoviz.rest.TMdbApiInterface;
+
+import java.io.IOException;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+
+public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener, InternetConnectionListener {
+
+    private final static String API_KEY = "";
+    private static final String TAG = MainActivity.class.getSimpleName();
+    RecyclerView recyclerView;
+    MovizAdapter movizAdapter;
+    Toolbar toolbar;
+    final TMdbApiInterface tMdbApiInterface = TMdbApiClient.getClient().create(TMdbApiInterface.class);
+    List<Moviz> movizs;
+
+    LinearLayout linlaHeaderProgress;
+    final int numberOfColumns = 2;
+    final int numberOftabletColumns = 4;
+    App app;
+
+
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+
+        initUIComponents();
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+
+
+
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+            recyclerView.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
+        }
+        else{
+            recyclerView.setLayoutManager(new GridLayoutManager(this, numberOftabletColumns));
+        }
+
+
+         app = new App();
+        app.setInternetConnectionListener(this);
+        loadMoviesFromSharedPreferences();
+
+    }
+
+    /**
+     * This method will allow us to initialize our views from the xml and assign them to the
+     * variables we have created
+     */
+
+    private void initUIComponents() {
+
+        toolbar = findViewById(R.id.toolbar);
+        recyclerView = findViewById(R.id.rvMoviz);
+        linlaHeaderProgress = findViewById (R.id.linlaHeaderProgress);
+
+    }
+    /**
+     * This method will get the Top Rated movies from TMDB
+     */
+
+    private void requestTopRatedMovies(){
+
+
+
+         if(API_KEY.isEmpty()){
+
+             toastApiKeyError();
+
+         }else {
+
+
+             Call<MovizResponse> call = tMdbApiInterface.getTopratedMovies(API_KEY);
+             linlaHeaderProgress.setVisibility(View.VISIBLE);
+             call.enqueue(new Callback<MovizResponse>() {
+                 @Override
+                 public void onResponse(Call<MovizResponse> call, Response<MovizResponse> response) {
+                     if (response.isSuccessful()) {
+                         movizs = response.body().getResults();
+                         movizAdapter = new MovizAdapter(movizs, getApplicationContext());
+
+                         recyclerView.setAdapter(movizAdapter);
+
+
+                         Log.d(TAG, "Number of Top Rated Movies Received:" + movizs.size());
+
+                         linlaHeaderProgress.setVisibility(View.GONE);
+
+
+                     } else {
+
+                         Toast.makeText(MainActivity.this, "Server returned an error", Toast.LENGTH_SHORT).show();
+
+                         linlaHeaderProgress.setVisibility(View.GONE);
+
+                     }
+
+                 }
+
+                 @Override
+                 public void onFailure(Call<MovizResponse> call, Throwable t) {
+                     if (t instanceof IOException) {
+                         Log.e(TAG, t.toString());
+                         Toast.makeText(MainActivity.this, "Please check your internet Connection", Toast.LENGTH_SHORT).show();
+                         linlaHeaderProgress.setVisibility(View.GONE);
+
+
+                     } else {
+                         Toast.makeText(MainActivity.this, "Conversion error encountered", Toast.LENGTH_SHORT).show();
+                         linlaHeaderProgress.setVisibility(View.GONE);
+
+                     }
+
+
+                 }
+
+             });
+         }
+    }
+
+    /**
+     * This method will get the Most Popular movies from TMDB
+     */
+
+    private void requestMostPopularMovies(){
+
+
+        if(API_KEY.isEmpty()){
+
+            toastApiKeyError();
+        } else
+
+            {
+
+
+            Call<MovizResponse> call = tMdbApiInterface.getPopularMovies(API_KEY);
+            linlaHeaderProgress.setVisibility(View.VISIBLE);
+            call.enqueue(new Callback<MovizResponse>() {
+                @Override
+                public void onResponse(Call<MovizResponse> call, Response<MovizResponse> response) {
+                    if (response.isSuccessful()) {
+                        movizs = response.body().getResults();
+                        movizAdapter = new MovizAdapter(movizs, getApplicationContext());
+                        recyclerView.setAdapter(movizAdapter);
+
+                        Log.d(TAG, "Number of Popular Movies Received:" + movizs.size());
+                        linlaHeaderProgress.setVisibility(View.GONE);
+                    } else {
+
+                        Toast.makeText(MainActivity.this, "Server returned an error", Toast.LENGTH_SHORT).show();
+                        linlaHeaderProgress.setVisibility(View.GONE);
+
+                    }
+
+                }
+
+                @Override
+                public void onFailure(Call<MovizResponse> call, Throwable t) {
+                    if (t instanceof IOException) {
+                        Log.e(TAG, t.toString());
+                        Toast.makeText(MainActivity.this, "Please check your internet Connection", Toast.LENGTH_SHORT).show();
+                        linlaHeaderProgress.setVisibility(View.GONE);
+
+                    } else {
+                        Toast.makeText(MainActivity.this, "Conversion error encountered", Toast.LENGTH_SHORT).show();
+                        Log.e(TAG, t.toString());
+                        linlaHeaderProgress.setVisibility(View.GONE);
+                    }
+
+
+                }
+
+
+            });
+
+        }
+
+    }
+
+    /**
+     * This method will display a toast error if there is no
+     * api key initialized by the user
+     */
+
+    public void toastApiKeyError(){
+
+        Toast.makeText(getApplicationContext(), "Please obtain your API KEY first from themoviedb.org", Toast.LENGTH_LONG).show();
+    }
+
+    /**
+     * This method will load movies to the UI based on the user's preference
+     */
+
+    public void loadMoviesFromSharedPreferences(){
+
+        SharedPreferences sharedPreferences;
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String userPreference = sharedPreferences.getString(getResources().getString(R.string.pref_sort_key), getResources().getString( R.string.pref_sort_most_popuar_value));
+
+
+        if(userPreference.equals(getResources().getString(R.string.pref_sort_most_popuar_value))){
+            recyclerView.setAdapter(null);
+            requestMostPopularMovies();
+
+        } else {
+            recyclerView.setAdapter(null);
+            requestTopRatedMovies();
+
+        }
+
+
+     sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.movie_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if(id == R.id.settings){
+            startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+        } else if(id == R.id.refresh){
+            loadMoviesFromSharedPreferences();
+        }
+        return true;
+    }
+
+
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if(key.equals(getResources().getString(R.string.pref_sort_key))) {
+
+            String userPreference = sharedPreferences.getString(key, null);
+
+            if(userPreference.equals(getResources().getString(R.string.pref_sort_most_popuar_value))){
+
+
+                requestMostPopularMovies();
+
+            } else {
+
+                requestTopRatedMovies();
+
+            }
+
+        }
+    }
+
+
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+     PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+      app.removeInternetConnectionListener();
+    }
+
+    @Override
+    public void onInternetUnavailable() {
+
+    }
+}

@@ -31,12 +31,10 @@
     <ImageView
         android:id="@+id/ivThumbnail"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/thumbnail_height"
+        android:layout_height="@dimen/thumbnail_height_tablet"
         android:contentDescription="@string/detailsthumbnail"
         android:scaleType="centerCrop"
         android:src="@drawable/diariesposter" />
-
-
 
 
     <TextView
@@ -44,17 +42,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/activity_detail_margin"
-        android:layout_marginLeft="@dimen/activity_detail_margin"
-        android:layout_marginRight="@dimen/activity_detail_margin"
         android:layout_marginStart="@dimen/activity_detail_margin"
         android:layout_marginTop="@dimen/activity_detail_margin16"
         android:padding="@dimen/activity_details_padding_top"
         android:text="@string/title"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ivThumbnailBackdrop" />
+        app:layout_constraintStart_toEndOf="@+id/ivThumbnailBackdrop"
+        app:layout_constraintTop_toBottomOf="@+id/ivThumbnail" />
 
 
     <TextView
@@ -75,35 +70,34 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/activity_detail_margin"
         android:layout_marginStart="@dimen/activity_detail_margin"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:padding="8dp"
-        android:text="@string/description"
+        android:layout_marginTop="@dimen/activity_detail_description_marginTop"
         android:lineSpacingMultiplier="1.15"
+        android:padding="@dimen/activity_details_padding_top"
+        android:text="@string/description"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="@dimen/activity_detail_rating_width"
-        android:layout_height="@dimen/activity_detail_rating_height"
-        android:layout_marginStart="@dimen/activity_detail_rating_marginStart"
-        android:layout_marginTop="@dimen/activity_detail_rating_marginTop"
+        android:layout_width="@dimen/activity_detail_rating_width_tablet"
+        android:layout_height="@dimen/activity_detail_rating_height_tablet"
+        android:layout_marginStart="@dimen/activity_detail_rating_marginStart_tablet"
+        android:layout_marginTop="@dimen/activity_detail_rating_marginTop_tablet"
         android:contentDescription="@string/rating_image"
         android:scaleType="centerCrop"
         android:src="@drawable/star"
         android:tint="@color/colorAccent"
         app:layout_constraintStart_toEndOf="@+id/ivThumbnailBackdrop"
-        app:layout_constraintTop_toBottomOf="@+id/ivThumbnail" />
+        app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
 
     <TextView
         android:id="@+id/tvRating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/activity_detail_margin"
         android:layout_marginStart="@dimen/activity_detail_margin"
         android:gravity="center_vertical"
         android:text="@string/_5_0"
@@ -114,26 +108,27 @@
 
     <ImageView
         android:id="@+id/ivThumbnailBackdrop"
-        android:layout_width="@dimen/activity_detail_image_width"
-        android:layout_height="@dimen/activity_detail_image_height"
-        android:layout_marginStart="@dimen/activity_detail_rating_marginStart"
-        android:layout_marginTop="@dimen/activity_detail_image_marginTop"
+        android:layout_width="@dimen/activity_detail_image_width_tablet"
+        android:layout_height="@dimen/activity_detail_image_height_tablet"
+        android:layout_marginTop="@dimen/activity_detail_image_marginTop_tablet"
         android:scaleType="centerCrop"
         android:src="@drawable/originalsposter"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/ivThumbnail"
-        android:contentDescription="@string/thumbnailBackdrop" />
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
+        android:contentDescription="@string/thumbnailBackdrop"/>
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/activity_detail_margin"
-        android:layout_marginTop="@dimen/activity_detail_margin16"
+        android:layout_marginTop="@dimen/activity_detail_margin"
         android:text="@string/released_on"
         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+        app:layout_constraintBottom_toBottomOf="@+id/ivThumbnailBackdrop"
         app:layout_constraintStart_toStartOf="@+id/imageView"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintTop_toBottomOf="@+id/tvRating"
+        app:layout_constraintVertical_bias="0.564" />
 
 
 </android.support.constraint.ConstraintLayout>

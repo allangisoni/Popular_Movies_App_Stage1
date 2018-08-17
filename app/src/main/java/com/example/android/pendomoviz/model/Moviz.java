@@ -10,7 +10,7 @@ package com.example.android.pendomoviz.model;
 
 public class Moviz implements Parcelable{
 
-    public static final String IMAGE_URL_BASE_PATH = "https://image.tmdb.org/t/p/w500";
+    private static final String IMAGE_URL_BASE_PATH = "https://image.tmdb.org/t/p/w500";
 
     @SerializedName("vote_count")
     private String voteCount;
@@ -180,11 +180,11 @@ public class Moviz implements Parcelable{
         this.releaseDate = releaseDate;
     }
 
-    public Moviz(Parcel parcel){
+    private Moviz(Parcel parcel){
 
         voteCount = parcel.readString();
         id = parcel.readInt();
-        video = (Boolean) parcel.readValue(null);
+        video = (Boolean) parcel.readValue(getClass().getClassLoader());
         voteAverage = parcel.readDouble();
         title = parcel.readString();
         popularity = parcel.readDouble();
@@ -194,7 +194,7 @@ public class Moviz implements Parcelable{
         genreIds = new ArrayList();
         parcel.readList(this.genreIds, Integer.class.getClassLoader());
         backdropPath = parcel.readString();
-        adult = (Boolean) parcel.readValue(null);
+        adult = (Boolean) parcel.readValue(getClass().getClassLoader());
         overview = parcel.readString();
         releaseDate = parcel.readString();
 

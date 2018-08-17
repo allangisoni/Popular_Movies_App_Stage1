@@ -4,13 +4,12 @@ package com.example.android.pendomoviz.adapter;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.example.android.pendomoviz.R;
 
 public class MovizViewHolder extends RecyclerView.ViewHolder {
 
-    public ImageView thumbnailImage;
+    public final ImageView thumbnailImage;
 
     public MovizViewHolder(View itemView) {
         super(itemView);
