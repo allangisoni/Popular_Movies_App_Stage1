@@ -12,6 +12,8 @@ The app includes the following features;
 This app uses The Movie Database API to retrieve movies. You must provide your own API key in order to build the app. When you get it, just paste it to: string API_KEY in the main activity
 
 # Screens
+* ![home screen](https://user-images.githubusercontent.com/10166741/44251477-2f7a2080-a201-11e8-8e58-b141e648cab7.png)
+* ![wakanda](https://user-images.githubusercontent.com/10166741/44251490-3dc83c80-a201-11e8-971b-5143bfaec6d8.png)
 
 # Libraries
 * Picasso library
