@@ -114,15 +114,15 @@
 
     <ImageView
         android:id="@+id/ivThumbnailBackdrop"
-        android:layout_width="@dimen/activity_detail_image_width"
+        android:layout_width="139dp"
         android:layout_height="@dimen/activity_detail_image_height"
         android:layout_marginStart="@dimen/activity_detail_rating_marginStart"
         android:layout_marginTop="@dimen/activity_detail_image_marginTop"
+        android:contentDescription="@string/thumbnailBackdrop"
         android:scaleType="centerCrop"
         android:src="@drawable/originalsposter"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/ivThumbnail"
-        android:contentDescription="@string/thumbnailBackdrop" />
+        app:layout_constraintTop_toTopOf="@+id/ivThumbnail" />
 
     <TextView
         android:id="@+id/textView"

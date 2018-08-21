@@ -38,7 +38,6 @@ public class DetailsActivity extends AppCompatActivity {
         setMovieDetails();
 
 
-
     }
 
     /**
@@ -72,8 +71,8 @@ public class DetailsActivity extends AppCompatActivity {
         tvReleaseDate.setText(moviz.getReleaseDate());
         tvDescription.setText(moviz.getOverview());
         tvRating.setText(moviz.getVoteAverage().toString() +" "+ "/ 10");
-        Picasso.with(this).load(moviz.getBackdropPath()).placeholder(R.drawable.originalsposter).error(R.drawable.imagenotfound3).into(ivThumbnail);
-        Picasso.with(this).load(moviz.getPosterPath()).placeholder(R.drawable.originalsposter).error(R.drawable.imagenotfound).into(ivThumbnailBackdrop);
+        Picasso.with(this).load(moviz.getBackdropPath()).placeholder(R.drawable.mtvmovies).error(R.drawable.imagenotfound3).into(ivThumbnail);
+        Picasso.with(this).load(moviz.getPosterPath()).placeholder(R.drawable.mtvmovies).error(R.drawable.imagenotfound).into(ivThumbnailBackdrop);
         backdropPath = moviz.getBackdropPath();
         posterPath = moviz.getPosterPath();
 
@@ -83,11 +82,7 @@ public class DetailsActivity extends AppCompatActivity {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-
-
         setMovieDetails();
-
-
         outState.putString("title", tvTitle.getText().toString());
         outState.putString("tvReleaseDate", tvReleaseDate.getText().toString());
         outState.putString("description", tvDescription.getText().toString());
@@ -105,9 +100,8 @@ public class DetailsActivity extends AppCompatActivity {
         tvReleaseDate.setText(savedInstanceState.getString("tvReleaseDate"));
         tvDescription.setText(savedInstanceState.getString("description"));
         tvRating.setText(savedInstanceState.getString("rating"));
-        Picasso.with(this).load(savedInstanceState.getString("thumbnail")).placeholder(R.drawable.originalsposter).error(R.drawable.imagenotfound3).into(ivThumbnail);
-        Picasso.with(this).load(savedInstanceState.getString("thumbnailBackdrop")).placeholder(R.drawable.originalsposter).error(R.drawable.imagenotfound).into(ivThumbnailBackdrop);
-
+        Picasso.with(this).load(savedInstanceState.getString("thumbnail")).placeholder(R.drawable.mtvmovies).error(R.drawable.imagenotfound3).into(ivThumbnail);
+        Picasso.with(this).load(savedInstanceState.getString("thumbnailBackdrop")).placeholder(R.drawable.mtvmovies).error(R.drawable.imagenotfound).into(ivThumbnailBackdrop);
 
     }
 }

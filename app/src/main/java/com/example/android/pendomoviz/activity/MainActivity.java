@@ -1,9 +1,12 @@
 package com.example.android.pendomoviz.activity;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.preference.PreferenceManager;
@@ -35,9 +38,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener, InternetConnectionListener {
+public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-    private final static String API_KEY = "";
+    private final static String API_KEY = "7f10a990314c43d89d94b1380199202d";
     private static final String TAG = MainActivity.class.getSimpleName();
     RecyclerView recyclerView;
     MovizAdapter movizAdapter;
@@ -48,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     LinearLayout linlaHeaderProgress;
     final int numberOfColumns = 2;
     final int numberOftabletColumns = 4;
-    App app;
+
 
 
 
@@ -73,10 +76,8 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             recyclerView.setLayoutManager(new GridLayoutManager(this, numberOftabletColumns));
         }
 
+        loadMoviesFromSharedPreferences(true);
 
-         app = new App();
-        app.setInternetConnectionListener(this);
-        loadMoviesFromSharedPreferences();
 
     }
 
@@ -114,7 +115,12 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                  public void onResponse(Call<MovizResponse> call, Response<MovizResponse> response) {
                      if (response.isSuccessful()) {
                          movizs = response.body().getResults();
-                         movizAdapter = new MovizAdapter(movizs, getApplicationContext());
+                         movizAdapter = new MovizAdapter(movizs, getApplicationContext(), new MovizAdapter.OnItemClickListener() {
+                             @Override
+                             public void onItemClick(Moviz movizitem) {
+
+                             }
+                         });
 
                          recyclerView.setAdapter(movizAdapter);
 
@@ -161,14 +167,12 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
     private void requestMostPopularMovies(){
 
-
         if(API_KEY.isEmpty()){
 
             toastApiKeyError();
         } else
 
             {
-
 
             Call<MovizResponse> call = tMdbApiInterface.getPopularMovies(API_KEY);
             linlaHeaderProgress.setVisibility(View.VISIBLE);
@@ -177,7 +181,12 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                 public void onResponse(Call<MovizResponse> call, Response<MovizResponse> response) {
                     if (response.isSuccessful()) {
                         movizs = response.body().getResults();
-                        movizAdapter = new MovizAdapter(movizs, getApplicationContext());
+                        movizAdapter = new MovizAdapter(movizs, getApplicationContext(), new MovizAdapter.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(Moviz movizitem) {
+
+                            }
+                        });
                         recyclerView.setAdapter(movizAdapter);
 
                         Log.d(TAG, "Number of Popular Movies Received:" + movizs.size());
@@ -228,26 +237,29 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
      * This method will load movies to the UI based on the user's preference
      */
 
-    public void loadMoviesFromSharedPreferences(){
-
+    public void loadMoviesFromSharedPreferences(boolean isConnected){
         SharedPreferences sharedPreferences;
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String userPreference = sharedPreferences.getString(getResources().getString(R.string.pref_sort_key), getResources().getString( R.string.pref_sort_most_popuar_value));
 
+        if(isConnected) {
+     if (userPreference.equals(getResources().getString(R.string.pref_sort_most_popuar_value))) {
+         recyclerView.setAdapter(null);
+         requestMostPopularMovies();
 
-        if(userPreference.equals(getResources().getString(R.string.pref_sort_most_popuar_value))){
-            recyclerView.setAdapter(null);
-            requestMostPopularMovies();
+     } else {
+         recyclerView.setAdapter(null);
+         requestTopRatedMovies();
 
-        } else {
-            recyclerView.setAdapter(null);
-            requestTopRatedMovies();
-
-        }
+     }
 
 
-     sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+    }else{
 
+     Log.d(TAG, "No internet connection was found:");
+
+    }
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
@@ -263,7 +275,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         if(id == R.id.settings){
             startActivity(new Intent(MainActivity.this, SettingsActivity.class));
         } else if(id == R.id.refresh){
-            loadMoviesFromSharedPreferences();
+            loadMoviesFromSharedPreferences(true);
         }
         return true;
     }
@@ -277,12 +289,11 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             String userPreference = sharedPreferences.getString(key, null);
 
             if(userPreference.equals(getResources().getString(R.string.pref_sort_most_popuar_value))){
-
-
+                recyclerView.setAdapter(null);
                 requestMostPopularMovies();
 
             } else {
-
+                recyclerView.setAdapter(null);
                 requestTopRatedMovies();
 
             }
@@ -297,6 +308,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     protected void onResume() {
         super.onResume();
      PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
+     App.activityResumed();
 
     }
 
@@ -309,12 +321,9 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     @Override
     protected void onPause() {
         super.onPause();
-
-      app.removeInternetConnectionListener();
-    }
-
-    @Override
-    public void onInternetUnavailable() {
+        App.activityPaused();
 
     }
+
+
 }

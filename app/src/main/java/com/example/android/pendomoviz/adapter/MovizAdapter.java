@@ -20,11 +20,17 @@ public class MovizAdapter extends RecyclerView.Adapter<MovizViewHolder> {
 
     private final List<Moviz> movizlist;
     private final Context context;
+    private final OnItemClickListener listener;
 
-    public  MovizAdapter(List<Moviz> movizlist, Context context){
+    public interface OnItemClickListener {
+        void onItemClick(Moviz movizitem);
+    }
+
+    public  MovizAdapter(List<Moviz> movizlist, Context context, OnItemClickListener listener){
 
         this.movizlist = movizlist;
         this.context = context;
+        this.listener = listener;
     }
 
     @NonNull
@@ -37,19 +43,8 @@ public class MovizAdapter extends RecyclerView.Adapter<MovizViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull MovizViewHolder holder, int position) {
 
-        final Moviz moviz = movizlist.get(position);
+        holder.bind(movizlist.get(position), listener);
 
-        Picasso.with(context).load( moviz.getPosterPath()).placeholder(R.drawable.diariesposter)
-                .error(R.drawable.diariesposter).into(holder.thumbnailImage);
-
-        holder.thumbnailImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, DetailsActivity.class);
-                intent.putExtra("movieDetails", moviz);
-                context.startActivity(intent);
-            }
-        });
     }
 
     @Override

@@ -27,13 +27,6 @@ public class App extends Application {
     }
 
 
-    private boolean isInternetAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
-
 
     public static  OkHttpClient provideOkHttpClient() {
         OkHttpClient.Builder okhttpClientBuilder = new OkHttpClient.Builder();
@@ -57,4 +50,24 @@ public class App extends Application {
 
         return okhttpClientBuilder.build();
     }
+
+    // Global declaration of variable to use in whole app
+
+    public static boolean activityVisible; // Variable that will check the
+    // current activity state
+
+    public static boolean isActivityVisible() {
+        return activityVisible; // return true or false
+    }
+
+    public static void activityResumed() {
+        activityVisible = true;// this will set true when activity resumed
+
+    }
+
+    public static void activityPaused() {
+        activityVisible = false;// this will set false when activity paused
+
+    }
+
 }

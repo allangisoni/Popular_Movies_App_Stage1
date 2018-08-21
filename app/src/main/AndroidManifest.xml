@@ -3,6 +3,8 @@
     package="com.example.android.pendomoviz">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- This permissions are neccessary for broadcast receiver -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
 
@@ -39,6 +41,19 @@
                 android:name="android.support.PARENT_ACTIVITY"/>
 
         </activity>
+
+        <!-- Broadcast receiver declaration in manifest file and make sure to enable it -->
+        <receiver
+            android:name="com.example.android.pendomoviz.InternetConnector_Receiver"
+            android:enabled="true" >
+            <intent-filter>
+
+                <!-- Intent filters for broadcast receiver -->
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
+                <action android:name="android.net.wifi.STATE_CHANGE" />
+            </intent-filter>
+        </receiver>
 
 
     </application>
