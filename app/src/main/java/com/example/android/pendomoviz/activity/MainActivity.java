@@ -40,7 +40,7 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-    private final static String API_KEY = "7f10a990314c43d89d94b1380199202d";
+    private final static String API_KEY = "";
     private static final String TAG = MainActivity.class.getSimpleName();
     RecyclerView recyclerView;
     MovizAdapter movizAdapter;
