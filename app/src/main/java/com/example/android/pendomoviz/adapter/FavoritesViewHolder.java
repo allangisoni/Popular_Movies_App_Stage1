@@ -1,39 +1,36 @@
 package com.example.android.pendomoviz.adapter;
 
-
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.example.android.pendomoviz.DetailsMain;
+import com.example.android.pendomoviz.Favorites;
 import com.example.android.pendomoviz.R;
 import com.example.android.pendomoviz.activity.DetailsActivity;
-import com.example.android.pendomoviz.activity.MainActivity;
-import com.example.android.pendomoviz.model.Moviz;
 import com.squareup.picasso.Picasso;
 
-public class MovizViewHolder extends RecyclerView.ViewHolder {
+public class FavoritesViewHolder extends RecyclerView.ViewHolder {
+
 
     public final ImageView thumbnailImage;
 
-    public MovizViewHolder(View itemView) {
+    public FavoritesViewHolder(View itemView) {
         super(itemView);
         thumbnailImage = itemView.findViewById(R.id.thumbnail_image);
 
     }
 
-    public void bind(final Moviz movizitem, final MovizAdapter.OnItemClickListener listener) {
+    public void bind(final Favorites favoritemovies, final FavoritesAdapter.OnItemClickListener listener) {
 
-        Picasso.with(itemView.getContext()).load(movizitem.getPosterPath()).into(thumbnailImage);
+        Picasso.with(itemView.getContext()).load(favoritemovies.getImageUrl()).into(thumbnailImage);
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
-                listener.onItemClick(movizitem);
+                listener.onItemClick(favoritemovies);
                 Intent intent = new Intent(itemView.getContext(), DetailsActivity.class);
-                intent.putExtra("movieDetails", movizitem);
+                intent.putExtra("movieDetails", favoritemovies);
                 itemView.getContext().startActivity(intent);
             }
         });
     }
-
 }

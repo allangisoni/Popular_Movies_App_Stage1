@@ -15,6 +15,10 @@ public interface TMdbApiInterface {
     @GET("movie/popular")
     Call<MovizResponse> getPopularMovies(@Query("api_key") String apiKey);
 
+    @GET("movie/{movieId}?append_to_response=videos,reviews")
+    Call<MovizResponse> getMovie(@Path("movieId") int movieId, @Query("api_key") String apiKey);
+
+
     @GET("movie/id")
     Call<MovizResponse> getMovieDetails(@Path("id") int id , @Query("api_key") String apiKey);
 }

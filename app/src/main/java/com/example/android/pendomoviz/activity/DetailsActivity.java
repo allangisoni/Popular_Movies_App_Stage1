@@ -1,25 +1,50 @@
 package com.example.android.pendomoviz.activity;
 
+import android.arch.persistence.room.Room;
+import android.content.Context;
 import android.content.Intent;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 
+import com.example.android.pendomoviz.DetailsMain;
+import com.example.android.pendomoviz.Favorites;
+import com.example.android.pendomoviz.FavoritesDb;
 import com.example.android.pendomoviz.R;
+import com.example.android.pendomoviz.ReviewsFragment;
 import com.example.android.pendomoviz.model.Moviz;
 import com.squareup.picasso.Picasso;
 
 public class DetailsActivity extends AppCompatActivity {
 
-    private TextView tvTitle, tvReleaseDate, tvDescription, tvRating;
+    private TextView tvTitle, tvReleaseDate, tvDescription, tvRating, tvReviewsTrailers;
 
-    private ImageView ivThumbnail, ivThumbnailBackdrop;
+    private ImageView ivThumbnail, ivThumbnailBackdrop, ivFavorites;
     private Toolbar toolbar;
 
     private String backdropPath, posterPath;
+
+
+    private FavoritesDb favoritesDb;
+    Intent intent;
+
+    private  boolean isFavorite;
+  //  private ListView listView;
+
+    private String[] values;
+
+
+
+
 
 
 
@@ -36,16 +61,79 @@ public class DetailsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         setMovieDetails();
+        isFavorite = false;
+
+
+       ivFavorites.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+
+               setFavorite(isFavorite);
+
+
+
+               new Thread(new Runnable() {
+                   @Override
+                   public void run() {
+
+
+                      /** Favorites favorites = new Favorites();
+
+                       favorites.setName(moviz.getTitle());
+                       favorites.setImageUrl(moviz.getPosterPath());
+                       FavoritesDb.getAppDatabase(getApplicationContext()).favoritesDao().insertOnlySingleMovie(favorites);
+                       **/
+                   }
+               }).start();
+           }
+       });
+
+
+       tvReviewsTrailers.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+               Moviz moviz = intent.getParcelableExtra("movieDetails");
+               Intent intent = new Intent(getApplicationContext(), ReviewsFragment.class);
+               intent.putExtra("movieDetails", moviz );
+
+               startActivity(intent);
+           }
+       });
+
+
+
+        values= new String[] { "Android List View",
+                "Adapter implementation",
+                "Simple List View In Android",
+                "Create List View Android",
+                "Android Example",
+                "List View Source Code",
+                "List View Array Adapter",
+                "Android Example List View"
+        };
 
 
     }
+
+    public void setFavorite(Boolean isMovieFavorite){
+        if(isMovieFavorite == false){
+            ivFavorites.setColorFilter(getResources().getColor(R.color.colorAccent));
+            isFavorite = true;
+        }
+         else{
+            ivFavorites.setColorFilter(getResources().getColor(R.color.blue));
+            isFavorite = false;
+
+        }
+    }
+
 
     /**
      * This method will allow us to initialize our views from the xml and assign them to the
      * variables we have created
      */
     private void initUIComponents() {
-
+        intent = getIntent();
         toolbar = findViewById(R.id.toolbar);
         tvTitle = findViewById(R.id.tvTitle);
         tvReleaseDate = findViewById(R.id.tvReleaseDate);
@@ -53,6 +141,11 @@ public class DetailsActivity extends AppCompatActivity {
         ivThumbnail = findViewById(R.id.ivThumbnail);
         tvRating = findViewById(R.id.tvRating);
         ivThumbnailBackdrop = findViewById(R.id.ivThumbnailBackdrop);
+        ivFavorites = findViewById(R.id.imageViewFavorite);
+        tvReviewsTrailers =  findViewById(R.id.tvReviewsTrailers);
+
+
+
 
     }
 
@@ -62,8 +155,6 @@ public class DetailsActivity extends AppCompatActivity {
      */
 
     private  void setMovieDetails(){
-
-        Intent intent = getIntent();
 
         Moviz moviz = intent.getParcelableExtra("movieDetails");
 

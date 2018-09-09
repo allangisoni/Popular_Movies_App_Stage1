@@ -41,10 +41,13 @@ public class Moviz implements Parcelable{
     @SerializedName("release_date")
     private String releaseDate;
 
+    @SerializedName("reviews")
+    private  Reviews reviews;
+
 
 
     public Moviz(String voteCount, int id, boolean video, double voteAverage, String title, double popularity, String posterPath, String originalLanguage,
-                 String originalTitle, List<Integer> genreIds, String backdropPath, boolean adult, String overview, String releaseDate) {
+                 String originalTitle, List<Integer> genreIds, String backdropPath, boolean adult, String overview, String releaseDate, Reviews reviews) {
 
         this.voteCount = voteCount;
         this.id = id;
@@ -60,10 +63,11 @@ public class Moviz implements Parcelable{
         this.adult = adult;
         this.overview = overview;
         this.releaseDate = releaseDate;
+        this.reviews = reviews;
 
     }
 
-    //constructor used for parcel
+
 
 
     public String getVoteCount() {
@@ -180,6 +184,14 @@ public class Moviz implements Parcelable{
         this.releaseDate = releaseDate;
     }
 
+    public Reviews getReviews(){return  reviews;}
+
+    public void setReviews(Reviews reviews){
+        this.reviews = reviews;
+    }
+
+
+    //constructor used for parcel
     private Moviz(Parcel parcel){
 
         voteCount = parcel.readString();
@@ -197,6 +209,8 @@ public class Moviz implements Parcelable{
         adult = (Boolean) parcel.readValue(getClass().getClassLoader());
         overview = parcel.readString();
         releaseDate = parcel.readString();
+        reviews = parcel.readParcelable(Reviews.class.getClassLoader());
+
 
         //read and set saved values from parcel
     }
@@ -223,6 +237,7 @@ public class Moviz implements Parcelable{
         dest.writeValue(adult);
         dest.writeString(overview);
         dest.writeString(releaseDate);
+        dest.writeParcelable(reviews, flags);
     }
 
 

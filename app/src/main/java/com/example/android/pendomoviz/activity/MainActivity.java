@@ -21,9 +21,12 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.example.android.pendomoviz.Favorites;
+import com.example.android.pendomoviz.FavoritesDb;
 import com.example.android.pendomoviz.NetworkConnection.App;
 import com.example.android.pendomoviz.NetworkConnection.InternetConnectionListener;
 import com.example.android.pendomoviz.R;
+import com.example.android.pendomoviz.adapter.FavoritesAdapter;
 import com.example.android.pendomoviz.adapter.MovizAdapter;
 import com.example.android.pendomoviz.model.Moviz;
 import com.example.android.pendomoviz.model.MovizResponse;
@@ -40,10 +43,11 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-    private final static String API_KEY = "";
+    private final static String API_KEY = "7f10a990314c43d89d94b1380199202d";
     private static final String TAG = MainActivity.class.getSimpleName();
     RecyclerView recyclerView;
     MovizAdapter movizAdapter;
+    FavoritesAdapter favoritesAdapter;
     Toolbar toolbar;
     final TMdbApiInterface tMdbApiInterface = TMdbApiClient.getClient().create(TMdbApiInterface.class);
     List<Moviz> movizs;
@@ -223,6 +227,21 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
     }
 
+    private void requestFavoriteMovies() {
+
+        List<Favorites> favorites = FavoritesDb.getAppDatabase(getApplicationContext()).favoritesDao().getAll();
+        favoritesAdapter = new FavoritesAdapter(favorites, getApplicationContext(), new FavoritesAdapter.OnItemClickListener(){
+
+            @Override
+            public void onItemClick(Favorites favoritesMovies) {
+
+            }
+        });
+
+        recyclerView.setAdapter(favoritesAdapter);
+    }
+
+
     /**
      * This method will display a toast error if there is no
      * api key initialized by the user
@@ -292,10 +311,14 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                 recyclerView.setAdapter(null);
                 requestMostPopularMovies();
 
-            } else {
+            } else if(userPreference.equals(getResources().getString(R.string.pref_sort_top_rated_value))) {
                 recyclerView.setAdapter(null);
                 requestTopRatedMovies();
 
+            }
+            else {
+                recyclerView.setAdapter(null);
+                requestFavoriteMovies();
             }
 
         }
